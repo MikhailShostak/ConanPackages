@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup
-        uses: ./.github/platforms/macos-apple-clang
+        uses: ./.github-actions/platforms/macos-apple-clang
       - name: Build and Deploy
         run: python3 conan.py --ci-steps
   ubuntu:
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup
-        uses: ./.github/platforms/ubuntu-gcc
+        uses: ./.github-actions/platforms/ubuntu-gcc
         with:
           dependencies: libgl-dev
       - name: Build and Deploy
@@ -54,6 +54,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup
-        uses: ./.github/platforms/windows-msvc
+        uses: ./.github-actions/platforms/windows-msvc
       - name: Build and Deploy
         run: python3 conan.py --ci-steps
