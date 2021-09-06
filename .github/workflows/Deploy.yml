@@ -46,7 +46,7 @@ jobs:
       - name: Setup
         uses: ./.github-actions/platforms/ubuntu-gcc
         with:
-          dependencies: libgl-dev libxrandr-dev libxinerama-dev
+          dependencies: libgl-dev libxrandr-dev libxinerama-dev libxcursor-dev
       - name: Build and Deploy
         run: python3 conan.py --ci-steps
   windows:
