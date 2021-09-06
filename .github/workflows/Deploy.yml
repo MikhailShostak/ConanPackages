@@ -1,6 +1,10 @@
 name: Deploy
 on:
   workflow_dispatch:
+env:
+  ARTIFACTORY_KEY: ${{ secrets.ARTIFACTORY_KEY }}
+  ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
+  ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
 jobs:
   macos:
     name: macOS (Apple Clang 12)
