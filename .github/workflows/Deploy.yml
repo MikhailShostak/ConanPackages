@@ -1,6 +1,8 @@
 name: Deploy
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 env:
   ARTIFACTORY_KEY: ${{ secrets.ARTIFACTORY_KEY }}
   ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
