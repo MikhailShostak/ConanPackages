@@ -5,6 +5,7 @@ env:
   ARTIFACTORY_KEY: ${{ secrets.ARTIFACTORY_KEY }}
   ARTIFACTORY_URL: ${{ secrets.ARTIFACTORY_URL }}
   ARTIFACTORY_USER: ${{ secrets.ARTIFACTORY_USER }}
+  CONAN_REVISIONS_ENABLED: 1
 jobs:
   macos:
     name: macOS (Apple Clang 12)
