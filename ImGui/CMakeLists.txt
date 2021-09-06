@@ -4,6 +4,8 @@ project(imgui CXX)
 include(conanbuildinfo.cmake)
 conan_basic_setup()
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(MISC_DIR ${SOURCE_DIR}/misc)
 set(EXTRA_FONTS_DIR ${MISC_DIR}/fonts)
