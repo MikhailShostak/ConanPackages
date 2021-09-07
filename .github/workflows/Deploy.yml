@@ -48,6 +48,8 @@ jobs:
         with:
           dependencies: libgl-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
       - name: Build and Deploy
+        env:
+          BUILD_STDLIB: libstdc++11
         uses: ./.github/deploy
   windows:
     name: Windows (MSVC 16)
