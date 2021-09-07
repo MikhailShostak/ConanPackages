@@ -76,4 +76,4 @@ for arch in ARCHITECTURES:
                 create_package(package, profile)
 
 if CI_STEPS or '--deploy' in sys.argv:
-    run(['conan', 'upload', '*', '-r', ARTIFACTORY_NAME, '--all'] + ['-c'] if CI_STEPS else [])
+    run(['conan', 'upload', '*', '--all', '-r', ARTIFACTORY_NAME] + ['-c'] if CI_STEPS else [])
