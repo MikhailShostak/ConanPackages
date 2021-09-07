@@ -1,0 +1,11 @@
+name: Deploy
+description: Create and deploy packages
+runs:
+  using: composite
+  steps:
+    - name: Create and deploy packages
+      shell: bash
+      env:
+        BUILD_ARCHITECTURE: ${{ matrix.platform.arch }}
+        BUILD_CONFIGURATION: ${{ matrix.config }}
+      run: python3 conan.py --ci-steps
