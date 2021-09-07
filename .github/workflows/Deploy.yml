@@ -45,6 +45,8 @@ jobs:
         uses: ./.github-actions/platforms/ubuntu-gcc
         with:
           dependencies: libgl-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+        env:
+          BUILD_STDLIB: libstdc++11
       - name: Build and Deploy
         env:
           BUILD_STDLIB: libstdc++11
