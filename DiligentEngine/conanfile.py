@@ -12,7 +12,7 @@ class Conan(ConanFile):
     settings = 'os', 'compiler', 'build_type', 'arch'
 
     def source(self):
-        tools.get('https://github.com/DiligentGraphics/DiligentEngine/releases/download/v2.5/DiligentEngine_v2.5.zip', destination='src', strip_root=True)
+        tools.get('https://github.com/DiligentGraphics/DiligentEngine/releases/download/v' + self.version + '/DiligentEngine_v' + self.version + '.zip', destination='src', strip_root=True)
 
     def build(self):
         cmake = CMake(self)
