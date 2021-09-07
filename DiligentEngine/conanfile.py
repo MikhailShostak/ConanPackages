@@ -28,8 +28,8 @@ class Conan(ConanFile):
         self.copy('ImGuiDiligentRenderer.cpp', 'res', 'src/DiligentTools/Imgui/src', keep_path=False)
         self.copy('ImGuiImplDiligent.cpp', 'res', 'src/DiligentTools/Imgui/src', keep_path=False)
 
-        self.copy('*.lib', 'lib', 'build/DiligentCore', keep_path=False)
-        self.copy('*.pdb', 'lib', 'build/DiligentCore', keep_path=False)
+        for ext in ['.a', '.lib', '.dll', '.so', '.dylib', '.pdb', '.dsym']:
+            self.copy('*' + ext, 'lib', 'build/DiligentCore', keep_path=False)
 
     def package_info(self):
         if self.settings.os == 'Windows':
@@ -56,5 +56,5 @@ class Conan(ConanFile):
         self.cpp_info.libs = []
         for (root, dirs, files) in os.walk('lib'):
             for f in files:
-                if f.endswith('lib'):
+                if f.endswith('.lib') or f.endswith('.a'):
                     self.cpp_info.libs.append(f)
