@@ -49,10 +49,14 @@ if CI_STEPS or '--login' in sys.argv:
     run(['conan', 'user', '-p', ARTIFACTORY_KEY, '-r', ARTIFACTORY_NAME, ARTIFACTORY_USER], secure=True)
 
 packages = []
+receipts = []
 for root, dirs, files in os.walk('.'):
     for f in files:
         if f == 'conanfile.py':
             packages.append(root)
+            name = subprocess.check_output(['conan', 'inspect', root, '--raw', 'name'], encoding='utf-8')
+            version = subprocess.check_output(['conan', 'inspect', root, '--raw', 'version'], encoding='utf-8')
+            receipts.append(name + '/' + version)
 
 for arch in ARCHITECTURES:
     for config in CONFIGURATIONS:
@@ -76,4 +80,5 @@ for arch in ARCHITECTURES:
                 create_package(package, profile)
 
 if CI_STEPS or '--deploy' in sys.argv:
-    run(['conan', 'upload', '*', '--all', '-r', ARTIFACTORY_NAME] + ['-c'] if CI_STEPS else [])
+    for r in receipts:
+        run(['conan', 'upload', r, '--all', '-r', ARTIFACTORY_NAME] + ['-c'] if CI_STEPS else [])
