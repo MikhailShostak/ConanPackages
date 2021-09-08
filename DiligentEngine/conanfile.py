@@ -32,16 +32,22 @@ class Conan(ConanFile):
             self.copy('*' + ext, 'lib', 'build/DiligentCore', keep_path=False)
 
     def package_info(self):
+        diligent_platform = None
         if self.settings.os == 'Windows':
             self.cpp_info.defines = ['PLATFORM_WIN32=1']
+            diligent_platform = 'Win32'
         elif self.settings.os == 'Macos':
             self.cpp_info.defines = ['PLATFORM_MACOS=1']
+            diligent_platform = 'Apple'
         elif self.settings.os == 'Linux':
             self.cpp_info.defines = ['PLATFORM_LINUX=1']
+            diligent_platform = 'Linux'
         elif self.settings.os == 'Android':
             self.cpp_info.defines = ['PLATFORM_ANDROID=1']
+            diligent_platform = 'Android'
         elif self.settings.os == 'iOS':
             self.cpp_info.defines = ['PLATFORM_IOS=1']
+            diligent_platform = 'Apple'
 
         self.cpp_info.defines.append('DILIGENT_NO_DIRECT3D11')
         self.cpp_info.defines.append('DILIGENT_NO_DIRECT3D12')
@@ -53,8 +59,26 @@ class Conan(ConanFile):
                 if d == 'interface':
                     self.cpp_info.includedirs.append(root.replace('\\', '/') + '/' + d)
 
-        self.cpp_info.libs = []
-        for (root, dirs, files) in os.walk('lib'):
-            for f in files:
-                if f.endswith('.lib') or f.endswith('.a'):
-                    self.cpp_info.libs.append(f)
+        need_debug_sufix = self.settings.os == 'Windows' and self.settings.build_type == 'Debug'
+        self.cpp_info.libs = [
+            'Diligent-GraphicsEngineVk-static',
+            'Diligent-GraphicsEngineNextGenBase',
+            'Diligent-ShaderTools',
+            'Diligent-HLSL2GLSLConverterLib',
+            'Diligent-GraphicsEngine',
+            'spirv-cross-cored' if need_debug_sufix else 'spirv-cross-core',
+            'SPIRVd' if need_debug_sufix else 'SPIRV',
+            'glslangd' if need_debug_sufix else 'glslang',
+            'MachineIndependentd'  if need_debug_sufix else 'MachineIndependent',
+            'GenericCodeGend' if need_debug_sufix else 'GenericCodeGen',
+            'OGLCompilerd' if need_debug_sufix else 'OGLCompiler',
+            'OSDependentd' if need_debug_sufix else 'OSDependent',
+            'SPIRV-Tools-opt',
+            'SPIRV-Tools',
+            'Diligent-GraphicsTools',
+            'Diligent-GraphicsAccessories',
+            'Diligent-Common',
+            'Diligent-' + diligent_platform + 'Platform',
+            'Diligent-BasicPlatform',
+            'Diligent-Primitives',
+        ]
