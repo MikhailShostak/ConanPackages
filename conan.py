@@ -2,10 +2,10 @@ import os
 import subprocess
 import sys
 
-ARTIFACTORY_NAME = 'artifactory'
-ARTIFACTORY_URL = os.environ.get('ARTIFACTORY_URL')
-ARTIFACTORY_USER = os.environ.get('ARTIFACTORY_USER')
-ARTIFACTORY_KEY = os.environ.get('ARTIFACTORY_KEY')
+ARTIFACTORY_URL = os.environ.get('ARTIFACTORY_URL', None)
+ARTIFACTORY_USER = os.environ.get('ARTIFACTORY_USER', None)
+ARTIFACTORY_KEY = os.environ.get('ARTIFACTORY_KEY', None)
+ARTIFACTORY_NAME = 'artifactory' if ARTIFACTORY_URL else None
 
 ADDITIONAL_CONAN_COMMANDS = [arg for arg in ['--keep-source', '--keep-build'] if arg in sys.argv]
 
@@ -39,13 +39,13 @@ if '--info' in sys.argv:
 if CI_STEPS or '--install-conan' in sys.argv:
     run([sys.executable, '-m', 'pip', 'install', 'conan'])
 
-if CI_STEPS or '--add-artifactory' in sys.argv:
+if ARTIFACTORY_URL and (CI_STEPS or '--add-artifactory' in sys.argv):
     run(['conan', 'remote', 'add', ARTIFACTORY_NAME, ARTIFACTORY_URL])
 
 if '--logout' in sys.argv:
     run(['conan', 'user', '-c'])
 
-if CI_STEPS or '--login' in sys.argv:
+if ARTIFACTORY_KEY and (CI_STEPS or '--login' in sys.argv):
     run(['conan', 'user', '-p', ARTIFACTORY_KEY, '-r', ARTIFACTORY_NAME, ARTIFACTORY_USER], secure=True)
 
 packages = []
@@ -79,6 +79,6 @@ for arch in ARCHITECTURES:
             for package in packages:
                 create_package(package, profile)
 
-if CI_STEPS or '--deploy' in sys.argv:
+if ARTIFACTORY_NAME and (CI_STEPS or '--deploy' in sys.argv):
     for r in receipts:
         run(['conan', 'upload', r, '--all', '-r', ARTIFACTORY_NAME] + ['-c'] if CI_STEPS else [])
