@@ -12,7 +12,7 @@ runs:
     - name: Deploy artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ github.job }}-${{ matrix.config }}-${{ matrix.platform.arch }}
+        name: ${{ github.job }}-${{ matrix.platform.arch }}-${{ matrix.config }}
         path: |
           ~/.conan/data/*/*/*/*/export/
           ~/.conan/data/*/*/*/*/package/
