@@ -1,0 +1,3 @@
+[requires]
+fmt/8.0.1
+yaml-cpp/0.7.0

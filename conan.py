@@ -72,7 +72,7 @@ for arch in ARCHITECTURES:
             if 'BUILD_STDLIB' in os.environ:
                 run(['conan', 'profile', 'update', 'settings.compiler.libcxx=' + os.environ.get('BUILD_STDLIB'), profile])
 
-        if '--install-packages' in sys.argv:
+        if CI_STEPS or '--install-packages' in sys.argv:
             run(['conan', 'install', '.', '-if', os.path.join(BUILD_DIR, profile)] + ['--profile', profile, '--update', '--build=missing'])
 
         if CI_STEPS or '--create-packages' in sys.argv:
