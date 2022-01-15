@@ -69,7 +69,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${EXTENSIONS_DIR}/ImGuiFileDialog
     ${EXTENSIONS_DIR}/imgui-node-editor
 )
-target_compile_definitions(${PROJECT_NAME} PUBLIC "IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"")
+target_compile_definitions(${PROJECT_NAME} PUBLIC "IMGUI_ENABLE_FREETYPE" "IMGUI_USER_CONFIG=\"${IMGUI_USER_CONFIG}\"")
 
 include(GNUInstallDirs)
 
