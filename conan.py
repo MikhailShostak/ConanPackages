@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import json
 
 ARTIFACTORY_URL = os.environ.get('ARTIFACTORY_URL', None)
 ARTIFACTORY_USER = os.environ.get('ARTIFACTORY_USER', None)
@@ -54,15 +55,15 @@ for root, dirs, files in os.walk('.'):
     for f in files:
         if f == 'conanfile.py':
             packages.append(root)
-            name = subprocess.check_output(['conan', 'inspect', root, '--raw', 'name'], encoding='utf-8')
-            version = subprocess.check_output(['conan', 'inspect', root, '--raw', 'version'], encoding='utf-8')
-            receipts.append(name + '/' + version)
+            package_info = json.loads(subprocess.check_output(['conan', 'inspect', root, '--format=json'], encoding='utf-8'))
+            receipts.append(package_info['name'] + '/' + package_info['version'])
+
 
 for arch in ARCHITECTURES:
     for config in CONFIGURATIONS:
         profile = config + '-' + arch
         if CI_STEPS or '--create-profiles' in sys.argv:
-            run(['conan', 'profile', 'new', profile, '--detect', '--force'])
+            run(['conan', 'profile', 'detect', '--force', '--name', profile])
             run(['conan', 'profile', 'update', 'settings.build_type=' + config, profile])
             run(['conan', 'profile', 'update', 'settings.arch=' + arch, profile])
             run(['conan', 'profile', 'update', 'settings.arch_build=' + arch, profile])

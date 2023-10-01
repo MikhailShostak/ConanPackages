@@ -1,35 +1,38 @@
-from conans import ConanFile, CMake, tools
+from conan import ConanFile, tools
+from conan.tools.cmake import CMake
+
 import os
 
 class Conan(ConanFile):
-    name = 'DiligentEngine'
-    version = '2.5'
+    name = 'diligentengine'
+    version = '2.5.4'
     homepage = 'https://github.com/DiligentGraphics/DiligentEngine'
     description = 'A Modern Cross-Platform Low-Level 3D Graphics Library and Rendering Framework'
     topics = ('conan', 'DiligentEngine', '3d', 'graphics')
     license = 'Apache-2.0'
+    generators = "CMakeToolchain", "CMakeDeps"
 
     settings = 'os', 'compiler', 'build_type', 'arch'
 
     def source(self):
-        tools.get('https://github.com/DiligentGraphics/DiligentEngine/releases/download/v' + self.version + '/DiligentEngine_v' + self.version + '.zip', destination='src', strip_root=True)
+        tools.files.get(self, f'https://github.com/DiligentGraphics/DiligentEngine/releases/download/v{self.version}/DiligentEngine_v{self.version}.zip', destination='src', strip_root=True)
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(build_dir='build', source_dir='../src')
+        cmake.configure(build_script_folder='src')
         cmake.build(target='Diligent-GraphicsEngineVk-static')
         cmake.build(target='Diligent-GraphicsTools')
 
     def package(self):
         for ext in ['.h', '.hpp', '.inl']:
-            self.copy('*/interface/*' + ext, 'include/DiligentCore', 'src/DiligentCore', keep_path=True)
-            self.copy('*/interface/*' + ext, 'include/DiligentTools', 'src/DiligentTools', keep_path=True)
+            tools.files.copy(self, '*/interface/*' + ext, 'src/DiligentCore', 'include/DiligentCore', keep_path=True)
+            tools.files.copy(self, '*/interface/*' + ext, 'src/DiligentTools', 'include/DiligentTools', keep_path=True)
 
-        self.copy('ImGuiDiligentRenderer.cpp', 'res', 'src/DiligentTools/Imgui/src', keep_path=False)
-        self.copy('ImGuiImplDiligent.cpp', 'res', 'src/DiligentTools/Imgui/src', keep_path=False)
+        tools.files.copy(self, 'ImGuiDiligentRenderer.cpp', 'src/DiligentTools/Imgui/src', 'res', keep_path=False)
+        tools.files.copy(self, 'ImGuiImplDiligent.cpp', 'src/DiligentTools/Imgui/src', 'res', keep_path=False)
 
         for ext in ['.a', '.lib', '.dll', '.so', '.dylib', '.pdb', '.dsym']:
-            self.copy('*' + ext, 'lib', 'build/DiligentCore', keep_path=False)
+            tools.files.copy(self, '*' + ext, 'lib', 'build/DiligentCore', keep_path=False)
 
     def package_info(self):
         diligent_platform = None
